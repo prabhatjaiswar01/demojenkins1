@@ -1,0 +1,87 @@
+pipeline {
+    agent any
+    environment{
+        name= "prabhat"
+    }
+    parameters{
+        string(name:"Person",defaultValue: 'Prabhat Jaiswar ', description: "Who are you")
+        booleanParam(name:"isMale", defaultValue: true , description: "")
+         choice(name:"City", choices: ['Jaipur','MUmbai','pune'] , description: "")
+    }
+    stages {
+        stage('Run A Command') {
+            steps {
+                sh 'date'
+                sh 'pwd'
+                
+            }
+            
+        }
+         stage('multiple command run simultenously') {
+              
+            steps {
+                sh '''
+                ls
+                pwd
+                date
+                
+                '''
+            }
+            
+        }
+         stage('Environment Variables') {
+             
+            steps {
+                
+                sh 'echo "{$BUILD_ID}"'  
+                 sh 'echo "{$name}"'  
+                 sh  'echo "{$username}" '
+            }
+            
+        }
+         stage('deploy on prod') {
+             environment{
+                username= "prabhat"
+                }
+            steps {
+                echo 'deploy on prod'
+                sh  'echo "{$username}" '
+            }
+            
+        }
+         stage('parameter') {
+             
+            steps {
+                echo 'printing parameter'
+                  sh  'echo "{$Person}" '
+            }
+            
+        }
+         stage('Contineous it is A Contineous Delivery Stage') {
+             input{
+                 message "Should we Continue"
+                 ok "Yes we should"
+             }
+            steps {
+                echo 'printing parameter'
+                  sh  'echo "{$Person}" '
+            }
+            
+        }
+       
+       
+            
+        
+    }
+     post{
+            always{
+                echo "I will Always Execute"
+            }
+            failure{
+                echo "Failure "
+            }
+            success{
+                echo "Success"
+            }
+        }
+}
